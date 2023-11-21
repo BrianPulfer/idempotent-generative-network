@@ -1,0 +1,4 @@
+pytorch-lightning
+torch
+torchvision
+wandb
