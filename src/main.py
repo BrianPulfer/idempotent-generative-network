@@ -24,7 +24,9 @@ def main(args):
     train_set = MNIST(root="mnist", train=True, download=True, transform=transform)
     val_set = MNIST(root="mnist", train=False, download=True, transform=transform)
 
-    collate_fn = lambda samples: torch.stack([sample[0] for sample in samples])
+    def collate_fn(samples):
+        return torch.stack([sample[0] for sample in samples])
+
     train_loader = DataLoader(
         train_set,
         batch_size=args["batch_size"],

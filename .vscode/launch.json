@@ -19,8 +19,8 @@
             "program": "src/main.py",
             "console": "integratedTerminal",
             "args": [
-                "--epochs", "10",
-                "--batch_size", "256",
+                "--epochs", "100",
+                "--batch_size", "512",
             ],
             "justMyCode": true
         },

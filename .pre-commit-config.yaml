@@ -1,12 +1,4 @@
 repos:
-- repo: local
-  hooks:
-    - id: conda-env-export
-      name: conda-env-export
-      entry: bash scripts/export-conda.sh
-      language: system
-      pass_filenames: false
-
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
     hooks:
