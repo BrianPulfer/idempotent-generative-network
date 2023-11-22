@@ -19,10 +19,14 @@ def main(args):
 
     # Load datas
     normalize = Lambda(lambda x: (x - 0.5) * 2)
-    transform = Compose([ToTensor(), normalize])
+    noise = Lambda(lambda x: (x + torch.randn_like(x) * 0.15).clamp(-1, 1))
+    train_transform = Compose([ToTensor(), normalize, noise])
+    val_transform = Compose([ToTensor(), normalize])
 
-    train_set = MNIST(root="mnist", train=True, download=True, transform=transform)
-    val_set = MNIST(root="mnist", train=False, download=True, transform=transform)
+    train_set = MNIST(
+        root="mnist", train=True, download=True, transform=train_transform
+    )
+    val_set = MNIST(root="mnist", train=False, download=True, transform=val_transform)
 
     def collate_fn(samples):
         return torch.stack([sample[0] for sample in samples])
