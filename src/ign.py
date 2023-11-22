@@ -36,10 +36,10 @@ class IdempotentNetwork(pl.LightningModule):
     def get_losses(self, x):
         # Prior samples
         z = self.prior.sample_n(x.shape[0]).to(x.device)
-        
+
         # Updating the copy
         self.model_copy.load_state_dict(self.model.state_dict())
-        
+
         # Forward passes
         fx = self(x)
         fz = self(z)

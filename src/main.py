@@ -2,7 +2,6 @@ import os
 from argparse import ArgumentParser
 
 import torch
-from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 from torchvision.transforms import Compose, ToTensor, Lambda, ToPILImage
@@ -50,7 +49,10 @@ def main(args):
     logger = WandbLogger(name="IGN", project="Papers Re-implementations")
     callbacks = [
         ModelCheckpoint(
-            monitor="val/loss", mode="min", dirpath="checkpoints", filename="best",
+            monitor="val/loss",
+            mode="min",
+            dirpath="checkpoints",
+            filename="best",
         )
     ]
     trainer = pl.Trainer(
@@ -65,7 +67,9 @@ def main(args):
     # Loading the best model
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = (
-        IdempotentNetwork.load_from_checkpoint("checkpoints/best.ckpt", prior=prior, model=net)
+        IdempotentNetwork.load_from_checkpoint(
+            "checkpoints/best.ckpt", prior=prior, model=net
+        )
         .eval()
         .to(device)
     )
