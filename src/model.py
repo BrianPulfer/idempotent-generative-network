@@ -9,18 +9,22 @@ class Discriminator(nn.Module):
             # Input Size: 1 x 28 x 28
             nn.Conv2d(in_channels, base_c, 4, 2, 1, bias=False),
             nn.LeakyReLU(negative_slope=0.2, inplace=True),
+            nn.Dropout2d(0.1),
             # Input Size: 32 x 14 x 14
             nn.BatchNorm2d(base_c),
             nn.Conv2d(base_c, base_c * 2, 4, 2, 1, bias=False),
             nn.LeakyReLU(negative_slope=0.2, inplace=True),
+            nn.Dropout2d(0.1),
             # Input Size: 64 x 7 x 7
             nn.BatchNorm2d(base_c * 2),
             nn.Conv2d(base_c * 2, base_c * 4, 3, 1, 0, bias=False),
             nn.LeakyReLU(negative_slope=0.2, inplace=True),
+            nn.Dropout2d(0.1),
             # Input Size: 128 x 7 x 7
             nn.BatchNorm2d(base_c * 4),
             nn.Conv2d(base_c * 4, base_c * 8, 3, 1, 0, bias=False),
             nn.LeakyReLU(negative_slope=0.2, inplace=True),
+            nn.Dropout2d(0.1),
             # Input Size: 256 x 7 x 7
             nn.Conv2d(base_c * 8, base_c * 8, 3, 1, 0, bias=False),
         )
@@ -37,20 +41,24 @@ class Generator(nn.Module):
             nn.BatchNorm2d(in_channels),
             nn.ConvTranspose2d(in_channels, in_channels // 2, 3, 1, 0, bias=False),
             nn.ReLU(True),
+            nn.Dropout2d(0.1),
             # Input Size: 128 x 7 x 7
             nn.BatchNorm2d(in_channels // 2),
             nn.ConvTranspose2d(in_channels // 2, in_channels // 4, 3, 1, 0, bias=False),
             nn.ReLU(True),
+            nn.Dropout2d(0.1),
             # Input Size: 64 x 7 x 7
             nn.BatchNorm2d(in_channels // 4),
             nn.ConvTranspose2d(in_channels // 4, in_channels // 8, 3, 1, 0, bias=False),
             nn.ReLU(True),
+            nn.Dropout2d(0.1),
             # Input Size: 32 x 14 x 14
             nn.BatchNorm2d(in_channels // 8),
             nn.ConvTranspose2d(
                 in_channels // 8, in_channels // 16, 4, 2, 1, bias=False
             ),
             nn.ReLU(True),
+            nn.Dropout2d(0.1),
             # Input Size : 16 x 28 x 28
             nn.ConvTranspose2d(in_channels // 16, out_channels, 4, 2, 1, bias=False),
             nn.Tanh(),
