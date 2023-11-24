@@ -19,7 +19,7 @@
             "program": "src/main.py",
             "console": "integratedTerminal",
             "args": [
-                "--epochs", "100",
+                "--epochs", "30",
                 "--batch_size", "512",
             ],
             "justMyCode": true
