@@ -19,8 +19,9 @@
             "program": "src/main.py",
             "console": "integratedTerminal",
             "args": [
-                "--epochs", "30",
+                "--epochs", "100",
                 "--batch_size", "512",
+                "--skip_train"
             ],
             "justMyCode": true
         },
