@@ -4,7 +4,8 @@ from argparse import ArgumentParser
 import torch
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
-from torchvision.transforms import Compose, ToTensor, Lambda, ToPILImage
+from torchvision.utils import save_image
+from torchvision.transforms import Compose, ToTensor, Lambda
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -84,12 +85,8 @@ def main(args):
     # Generating images with the trained model
     os.makedirs("generated", exist_ok=True)
 
-    unnormalize = Lambda(lambda x: (x / 2) + 0.5)
-    transform = Compose([unnormalize, ToPILImage()])
-
-    images = model.generate_n(25, device=device)
-    for i, img in enumerate(images):
-        transform(img).save(f"generated/{i+1}.png")
+    images = model.generate_n(100, device=device)
+    save_image(images, "generated.png", nrow=10, normalize=True)
 
     print("Done!")
 
