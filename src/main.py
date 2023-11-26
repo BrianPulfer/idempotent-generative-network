@@ -51,24 +51,25 @@ def main(args):
     net = DCGANLikeModel()
     model = IdempotentNetwork(prior, net, args["lr"])
 
-    # Train model
-    logger = WandbLogger(name="IGN", project="Papers Re-implementations")
-    callbacks = [
-        ModelCheckpoint(
-            monitor="val/loss",
-            mode="min",
-            dirpath="checkpoints",
-            filename="best",
+    if not args["skip_train"]:
+        # Train model
+        logger = WandbLogger(name="IGN", project="Papers Re-implementations")
+        callbacks = [
+            ModelCheckpoint(
+                monitor="val/loss",
+                mode="min",
+                dirpath="checkpoints",
+                filename="best",
+            )
+        ]
+        trainer = pl.Trainer(
+            strategy="ddp",
+            accelerator="auto",
+            max_epochs=args["epochs"],
+            logger=logger,
+            callbacks=callbacks,
         )
-    ]
-    trainer = pl.Trainer(
-        strategy="ddp",
-        accelerator="auto",
-        max_epochs=args["epochs"],
-        logger=logger,
-        callbacks=callbacks,
-    )
-    trainer.fit(model, train_loader, val_loader)
+        trainer.fit(model, train_loader, val_loader)
 
     # Loading the best model
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -86,7 +87,7 @@ def main(args):
     unnormalize = Lambda(lambda x: (x / 2) + 0.5)
     transform = Compose([unnormalize, ToPILImage()])
 
-    images = model.generate_n(10, device=device)
+    images = model.generate_n(25, device=device)
     for i, img in enumerate(images):
         transform(img).save(f"generated/{i+1}.png")
 
@@ -100,6 +101,7 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=256)
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--num_workers", type=int, default=8)
+    parser.add_argument("--skip_train", action="store_true")
     args = vars(parser.parse_args())
 
     print("\n\n", args, "\n\n")
